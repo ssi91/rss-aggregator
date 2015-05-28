@@ -4,12 +4,15 @@
 
 #ifndef RSS_AGGREGATOR_MONGO_H
 #define RSS_AGGREGATOR_MONGO_H
+#include "../Idb.h"
 
-
-class Mongo
+namespace feed
 {
+	class Mongo : public IDB
+	{
+	public:
 
+	};
 };
-
 
 #endif //RSS_AGGREGATOR_MONGO_H
