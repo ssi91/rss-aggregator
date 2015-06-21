@@ -13,9 +13,8 @@ namespace feed
 	class IDB
 	{
 	public:
-		virtual static std::vector<Post> &getFromDB() = 0;
-		virtual static Post &getLastByDate() = 0;
-		virtual static void &setToDB(std::vector<Post> &) = 0;
+		virtual std::vector<Post> &getFromDB() = 0;
+		virtual void setToDB(std::vector<Post> &) = 0;
 	};
 };
 #endif //RSS_AGGREGATOR_IDB_H
