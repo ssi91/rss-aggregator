@@ -79,4 +79,11 @@ namespace feed
 		//TODO сделать возврат по ссылке
 		return mouthMap;
 	}
+
+	std::string Post::getTs_PubDatetoString() const
+	{
+		std::ostringstream pds;
+		pds << ts_pubDate;
+		return pds.str();
+	}
 }

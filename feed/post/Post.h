@@ -23,7 +23,10 @@ namespace feed
 
 		static std::map<std::string, boost::date_time::months_of_year> setMonthMap();
 	public:
-		Post(const std::string &title, const std::string &preview, const std::string &body = nullptr) : title(title), preview(preview), body(body)
+		Post(const std::string &title, const std::string &preview, const time_t &ts_pubDate, const std::string &body) : title(title),
+																																 preview(preview),
+																																 ts_pubDate(ts_pubDate),
+																																 body(body)
 		{ }
 
 		static time_t convertDateToTimestamp(const std::string &pubDate);
@@ -31,7 +34,8 @@ namespace feed
 		const std::string &getTitle() const;
 		const std::string &getPreview() const;
 		const std::string &getBody() const;
-		const time_t & getTs_PubDate() const;
+		const time_t &getTs_PubDate() const;
+		std::string getTs_PubDatetoString() const;
 
 		virtual const std::string &toOctopress() const;
 		virtual const std::string &toOctopress(const std::string &separator) const;
