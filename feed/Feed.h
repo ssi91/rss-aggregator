@@ -7,32 +7,30 @@
 
 #include "post/Post.h"
 #include "mongo/Mongo.h"
-/*
- * выяснять, есть ли обновления
- * сортировать по дате, если обновления с нескольких лент
- * выдавать список не добавленных в базу постов
- * выдавать список всех постов(из БД и пришедшие)
- */
+#include "../Stack.h"
+#include <vector>
+
 namespace feed
 {
 	class Feed
 	{
 	protected:
-		std::vector<Post> posts;
-		bool prepared;
-		bool pasted;
+		std::vector< Post > posts;
 
 		void sort(unsigned l, unsigned r);
 		void sortByDate();
 
-		Feed();
-		bool prepareFeed();
-		void insertToDB();
+		void listSort(std::vector< Stack< Post > > &stackList, std::vector< Post > &result);
+		virtual std::vector< Stack< Post > > &readFeedFiles(const IDB &mongo, const std::string &path = "rss-files") = 0;
 	public:
-		Feed(std::vector<Post> _posts) : posts(_posts)
+		Feed(std::vector< Post > _posts) : posts(_posts)
 		{ }
 
-		const std::vector<Post> &getPosts() const;
+		Feed()
+		{ }
+
+		void insertToDB(const IDB &db);
+		const std::vector< Post > &getPosts() const;
 	};
 
 };

@@ -6,7 +6,7 @@
 
 namespace feed
 {
-	const std::vector<Post> &Feed::getPosts() const
+	const std::vector< Post > &Feed::getPosts() const
 	{
 		return posts;
 	}
@@ -47,42 +47,39 @@ namespace feed
 		sort(0, posts.size() - 1);
 	}
 
-	Feed::Feed()
+	void Feed::insertToDB(const IDB &db)
 	{
-		prepared = pasted = false;
+		db.setToDB(posts);
 	}
 
-	bool Feed::prepareFeed()
+	void Feed::listSort(std::vector< Stack< Post > > &stackList, std::vector< Post > &result)
 	{
-		Post lDP = Mongo::getLastByDate();
-		if (lDP.getTs_PubDate() < posts.back().getTs_PubDate())
+		unsigned i = 0, k = 0;
+		for (std::vector< Stack< Post > >::iterator stack = stackList.begin(); stack != stackList.end(); ++stack)
 		{
-			//TODO найти годные для вставки посты, а остальные удалить
-			size_t i = posts.size() - 1;
-			for (std::vector<Post>::iterator it = posts.end(); it != posts.begin(); --it)
+			if (!stack->getCount())
 			{
-				if (it->getTs_PubDate() > lDP.getTs_PubDate())
-				{
-					--i;
-				}
+				stackList.erase(stack);
+				continue;
 			}
-			posts.erase(posts.begin(), posts.begin() + i - 1);
-			prepared = true;
-			pasted = false;
+			if (stackList[k].getTop().getTs_PubDate() > stack->getTop().getTs_PubDate())
+			{
+				k = i;
+			}
+			++i;
 		}
-		else
+		if (stackList.size())
 		{
-			prepared = false;
-			pasted = true;
-		}
-	}
+			result.push_back(stackList[k].pop());
 
-	void Feed::insertToDB()
-	{
-		if (prepared && !pasted)
-		{
-			Mongo::setToDB(posts);
-			pasted = true;
+			if (!stackList[k].getCount())
+			{
+				stackList.erase(stackList.begin() + k - 1);
+			}
+			if (stackList.size())
+			{
+				listSort(stackList, result);
+			}
 		}
 	}
-};
+}
