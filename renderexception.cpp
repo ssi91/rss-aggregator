@@ -13,9 +13,9 @@ RenderException::RenderException(std::string _m, std::string _f, std::string _fi
 	line = _l;
 }
 
-const char* RenderException::what() const throw()
+const char *RenderException::what() const throw()
 {
-	std::string line_str = (char*)line;
+	std::string line_str = (char *) line;
 	return (nameOfException + ": " + message + " in " + file + "(" + func + ": " + line_str + ")").c_str();
 }
 

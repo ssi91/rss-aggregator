@@ -7,17 +7,18 @@
 
 class RenderException : public std::exception
 {
-	private:
-		std::string message;
-		std::string func;
-		std::string file;
-		int line;
-	protected:
-		std::string nameOfException = "RenderException";
-	public:
-		RenderException(std::string _m = "");
-		RenderException(std::string _m, std::string _f, std::string _file, int _l);
-		virtual const char* what() const throw();
-		virtual ~RenderException() throw();
+private:
+	std::string message;
+	std::string func;
+	std::string file;
+	int line;
+protected:
+	std::string nameOfException = "RenderException";
+public:
+	RenderException(std::string _m = "");
+	RenderException(std::string _m, std::string _f, std::string _file, int _l);
+	virtual const char *what() const throw();
+	virtual ~RenderException() throw();
 };
+
 #endif
