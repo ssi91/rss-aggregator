@@ -7,7 +7,7 @@
 
 #include <glob.h>
 
-template<class T>
+template< class T >
 class Stack
 {
 private:
@@ -16,6 +16,7 @@ private:
 public:
 	Stack(const int &_a);
 	Stack();
+	Stack(const Stack< T > &stack);
 	~Stack();
 	void push(const T &_a);
 	T pop();
@@ -23,6 +24,8 @@ public:
 	void decTop();
 	size_t getCount();
 	T &getTop();
+
+	Stack< T > &operator=(Stack< T > &);
 };
 
 #include "Stack.cpp"

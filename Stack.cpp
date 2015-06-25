@@ -5,22 +5,22 @@
 #include "Stack.h"
 #include "renderexception.h"
 
-template<class T>
-inline Stack<T>::Stack()
+template< class T >
+inline Stack< T >::Stack()
 {
 	count = 0;
 }
 
 template<>
-inline Stack<int>::Stack(const int &_a)
+inline Stack< int >::Stack(const int &_a)
 {
 	count = 1;
 	a = new int;
 	a[0] = _a;
 }
 
-template<class T>
-inline Stack<T>::~Stack()
+template< class T >
+inline Stack< T >::~Stack()
 {
 	if (!getCount())
 		return;
@@ -28,8 +28,8 @@ inline Stack<T>::~Stack()
 		delete[] a;
 }
 
-template<class T>
-inline void Stack<T>::push(T const &_a)
+template< class T >
+inline void Stack< T >::push(T const &_a)
 {
 	T *temp;
 	if (count)
@@ -54,8 +54,8 @@ inline void Stack<T>::push(T const &_a)
 	++count;
 }
 
-template<class T>
-inline T Stack<T>::pop()
+template< class T >
+inline T Stack< T >::pop()
 {
 	if (count)
 	{
@@ -86,7 +86,7 @@ inline T Stack<T>::pop()
 }
 
 template<>
-inline void Stack<char>::incTop()
+inline void Stack< char >::incTop()
 {
 	if (count)
 		++a[count - 1];
@@ -97,7 +97,7 @@ inline void Stack<char>::incTop()
 }
 
 template<>
-inline void Stack<int>::incTop()
+inline void Stack< int >::incTop()
 {
 	if (count)
 		++a[count - 1];
@@ -108,7 +108,7 @@ inline void Stack<int>::incTop()
 }
 
 template<>
-inline void Stack<char>::decTop()
+inline void Stack< char >::decTop()
 {
 	if (count)
 		--a[count - 1];
@@ -119,7 +119,7 @@ inline void Stack<char>::decTop()
 }
 
 template<>
-inline void Stack<int>::decTop()
+inline void Stack< int >::decTop()
 {
 	if (count)
 		--a[count - 1];
@@ -129,17 +129,47 @@ inline void Stack<int>::decTop()
 	}
 }
 
-template<class T>
-inline size_t Stack<T>::getCount()
+template< class T >
+inline size_t Stack< T >::getCount()
 {
 	return count;
 }
 
-template<class T>
-inline T &Stack<T>::getTop()
+template< class T >
+inline T &Stack< T >::getTop()
 {
 	if (count)
 	{
 		return a[count - 1];
 	}
+}
+
+template< class T >
+Stack< T >::Stack(const Stack< T > &stack)
+{
+	count = stack.count;
+	if (count)
+	{
+		a = new T[count];
+		for (int i = 0; i < count; ++i)
+		{
+			a[i] = stack.a[i];
+		}
+	}
+}
+
+template< class T >
+Stack< T > &Stack< T >::operator=(Stack< T > &stack)
+{
+	count = stack.count;
+	if (count)
+	{
+		a = new T[count];
+		for (int i = 0; i < count; ++i)
+		{
+			a[i] = stack.a[i];
+		}
+	}
+
+	return *this;
 }
