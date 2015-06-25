@@ -1,7 +1,3 @@
-//
-// Created by ssi on 24.05.15.
-//
-
 #ifndef RSS_AGGREGATOR_POST_H
 #define RSS_AGGREGATOR_POST_H
 
@@ -21,15 +17,15 @@ namespace feed
 		std::string body;
 		time_t ts_pubDate;
 
-		static std::map<std::string, boost::date_time::months_of_year> setMonthMap();
 	public:
 		Post(const std::string &title, const std::string &preview, const time_t &ts_pubDate, const std::string &body) : title(title),
-																																 preview(preview),
-																																 ts_pubDate(ts_pubDate),
-																																 body(body)
+																														preview(preview),
+																														ts_pubDate(ts_pubDate),
+																														body(body)
 		{ }
 
-		static time_t convertDateToTimestamp(const std::string &pubDate);
+		Post() : ts_pubDate(0)
+		{ }
 
 		const std::string &getTitle() const;
 		const std::string &getPreview() const;

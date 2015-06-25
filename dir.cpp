@@ -11,7 +11,7 @@ std::string parseLastDir(const std::string _file)
 		{
 			return _file.substr(0, i + 1);
 		}
-		else if(!i)
+		else if (!i)
 		{
 			throw LOG_TRACE("Wrong dir-string!")
 		}
