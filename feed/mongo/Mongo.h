@@ -13,7 +13,7 @@ namespace feed
 	class Mongo : public IDB
 	{
 	private:
-		boost::scoped_ptr<mongo::DBClientBase> conn;
+		boost::scoped_ptr< mongo::DBClientBase > conn;
 		mongo::ConnectionString cs;
 		std::string base;
 		std::string uri;
@@ -25,9 +25,10 @@ namespace feed
 		Mongo(const std::string &_uri, const std::string &_base, const unsigned &_port);
 		Mongo(const std::string &fullUrl, const std::string &_baseCollect);
 
-		std::vector<Post> &getFromDB();
-		void setToDB(std::vector<Post> &);
-		bool isUniquePost(const Post &);
+		std::vector< Post > &getFromDB();
+		void setToDB(std::vector< Post > &) const;
+		const Post &getLastByDate() const;
+		bool isUniquePost(const Post &) const;
 
 		static std::string delQuotes(std::string);
 	};

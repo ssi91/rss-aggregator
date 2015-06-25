@@ -7,19 +7,18 @@
 
 namespace feed
 {
-	std::vector<Post> &Mongo::getFromDB()
+	std::vector< Post > &Mongo::getFromDB()
 	{
 		mongo::Query query;
-		std::vector<mongo::BSONObj> feedVector;
-		std::auto_ptr<mongo::DBClientCursor> cursor = conn->query(base, query, 0);
+		std::vector< mongo::BSONObj > feedVector;
+		std::auto_ptr< mongo::DBClientCursor > cursor = conn->query(base, query, 0);
 
-		std::vector<Post> *vP = new std::vector<Post>;
+		std::vector< Post > *vP = new std::vector< Post >;
 
 		while (cursor->more())
 		{
 			mongo::BSONObj obj = cursor->next();
-			Post post(delQuotes(obj["title"].toString(false)), delQuotes(obj["preview"].toString(false)), atoi(obj["pubDate"].toString(false).c_str()),
-					  delQuotes(obj["body"].toString()));
+			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
 			vP->push_back(post);
 		}
 //TODO: не забыть удалить
@@ -33,9 +32,9 @@ namespace feed
 		return string;
 	}
 
-	void Mongo::setToDB(std::vector<Post> &vector)
+	void Mongo::setToDB(std::vector< Post > &vector) const
 	{
-		for (std::vector<Post>::iterator post = vector.begin(); post != vector.end(); ++post)
+		for (std::vector< Post >::iterator post = vector.begin(); post != vector.end(); ++post)
 		{
 			if (isUniquePost(*post))
 			{
@@ -44,18 +43,20 @@ namespace feed
 										<< "pubDate" << (int) post->getTs_PubDate()
 										<< "body" << post->getBody());
 				mongo::Query query(o);
+
+				//TODO база и коллекция из поля
 				conn->insert("feed_test.testcoll", o);
 			}
 		}
 	}
 
-	bool Mongo::isUniquePost(const Post &post)
+	bool Mongo::isUniquePost(const Post &post) const
 	{
 		mongo::BSONObj o = BSON("title" << post.getTitle()
 								<< "preview" << post.getPreview()
 								<< "pubDate" << post.getTs_PubDatetoString());
 		mongo::Query query(o);
-		std::auto_ptr<mongo::DBClientCursor> cursor = conn->query(base, query);
+		std::auto_ptr< mongo::DBClientCursor > cursor = conn->query(base, query);
 		return cursor->itcount() == 0;
 	}
 
@@ -76,6 +77,8 @@ namespace feed
 		}
 
 		conn.reset(cs.connect(errmsg));
+
+		//TODO база, логин и пароль брать из полей
 		conn->auth("feed_test", "u1", "p1", errmsg);
 
 	}
@@ -98,5 +101,13 @@ namespace feed
 		portStream >> port;
 
 		initConnection(fullUrl);
+	}
+
+	const Post &Mongo::getLastByDate() const
+	{
+		mongo::Query query;
+		mongo::BSONObj obj = conn->findOne(base, query.sort("pubDate", -1));
+		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
+		return *post;
 	}
 }
