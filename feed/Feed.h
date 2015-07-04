@@ -21,7 +21,7 @@ namespace feed
 		void sortByDate();
 
 		void listSort(std::vector< Stack< Post > > &stackList, std::vector< Post > &result);
-		virtual std::vector< Stack< Post > > &readFeedFiles(const IDB &mongo, const std::string &path = "rss-files") = 0;
+		virtual std::vector< Stack< Post > > &readFeedFiles(const IDB &db, const std::string &path = "rss-files") = 0;
 	public:
 		Feed(std::vector< Post > _posts) : posts(_posts)
 		{ }
