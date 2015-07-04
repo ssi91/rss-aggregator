@@ -161,6 +161,9 @@ Stack< T >::Stack(const Stack< T > &stack)
 template< class T >
 Stack< T > &Stack< T >::operator=(Stack< T > &stack)
 {
+	if (count)
+		delete[] a;
+
 	count = stack.count;
 	if (count)
 	{

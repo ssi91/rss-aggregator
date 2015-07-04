@@ -74,7 +74,7 @@ namespace feed
 
 			if (!stackList[k].getCount())
 			{
-				stackList.erase(stackList.begin() + k - 1);
+				stackList.erase(stackList.begin() + k);
 			}
 			if (stackList.size())
 			{
