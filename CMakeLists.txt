@@ -39,10 +39,16 @@ set(SOURCE_FILES
     dir.cpp
     renderexception.cpp
     Stack.h
-#    testutilities.cc
-#    testutilities.h
-#    xmltest.cpp
     testimport.cpp
     )
 add_executable(rss_aggregator ${SOURCE_FILES})
-target_link_libraries(rss_aggregator mongoclient pthread sasl2 crypto ssl ${XMLPP_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(rss_aggregator
+    mongoclient
+    pthread
+    sasl2
+    crypto
+    ssl
+    ${XMLPP_LIBRARIES}
+    ${Boost_LIBRARIES}
+    SimpleAmqpClient
+    )
