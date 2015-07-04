@@ -76,10 +76,6 @@ namespace feed
 		}
 
 		conn.reset(cs.connect(errmsg));
-
-		//TODO база, логин и пароль брать из полей
-		conn->auth("feed_test", "u1", "p1", errmsg);
-
 	}
 
 	Mongo::Mongo(const std::string &_uri, const std::string &_base, const unsigned &_port) : uri(_uri), base(_base), port(_port)
@@ -108,5 +104,10 @@ namespace feed
 		mongo::BSONObj obj = conn->findOne(base, query.sort("pubDate", -1));
 		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
 		return *post;
+	}
+
+	bool Mongo::auth(const std::string &login, const std::string &password)
+	{
+		return conn->auth(base, login, password, errmsg);
 	}
 }
