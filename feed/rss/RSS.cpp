@@ -22,9 +22,9 @@ namespace feed
 		}
 	}
 
-	std::vector< Stack< Post > > &RSS::readFeedFiles(const IDB &mongo, const std::string &path)
+	std::vector< Stack< Post > > &RSS::readFeedFiles(const IDB &db, const std::string &path)
 	{
-		time_t lastDate = mongo.getLastByDate().getTs_PubDate();
+		time_t lastDate = db.getLastByDate().getTs_PubDate();
 		using namespace boost::filesystem;
 		std::vector< Stack< Post > > *vector = new std::vector< Stack< Post > >;
 
@@ -94,12 +94,14 @@ namespace feed
 						Post post = Post(title, preview, pubDate, body);
 						stack.push(post);
 					}
+					else
+						break;
 				}
 				else
 					continue;
 			}
-
-			vector->push_back(stack);
+			if (stack.getCount())
+				vector->push_back(stack);
 		}
 
 		return *vector;
@@ -140,7 +142,6 @@ namespace feed
 		mouthMap->insert(std::make_pair("Nov", boost::date_time::Nov));
 		mouthMap->insert(std::make_pair("Dec", boost::date_time::Dec));
 
-		//TODO сделать возврат по ссылке
 		return *mouthMap;
 	}
 

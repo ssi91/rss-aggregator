@@ -29,6 +29,7 @@ namespace feed
 		Feed()
 		{ }
 
+		const size_t &countFeeds() const;
 		void insertToDB(const IDB &db);
 		const std::vector< Post > &getPosts() const;
 	};

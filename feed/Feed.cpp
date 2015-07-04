@@ -82,4 +82,9 @@ namespace feed
 			}
 		}
 	}
+
+	const size_t &Feed::countFeeds() const
+	{
+		return posts.size();
+	}
 }

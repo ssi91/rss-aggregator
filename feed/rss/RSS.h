@@ -10,7 +10,7 @@ namespace feed
 	class RSS : public Feed
 	{
 	private:
-		std::vector< Stack< Post > > &readFeedFiles(const IDB &mongo, const std::string &path = "rss-files");
+		std::vector< Stack< Post > > &readFeedFiles(const IDB &db, const std::string &path = "rss-files");
 
 		static std::map< std::string, boost::date_time::months_of_year > &setMonthMap();
 	public:
