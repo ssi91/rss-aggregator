@@ -36,17 +36,16 @@ namespace feed
 	{
 		for (std::vector< Post >::iterator post = vector.begin(); post != vector.end(); ++post)
 		{
-			if (isUniquePost(*post))
-			{
-				mongo::BSONObj o = BSON("title" << post->getTitle()
-										<< "preview" << post->getPreview()
-										<< "pubDate" << (int) post->getTs_PubDate()
-										<< "body" << post->getBody());
-				mongo::Query query(o);
+//			if (isUniquePost(*post))
+//			{
+			mongo::BSONObj o = BSON("title" << post->getTitle().c_str()
+									<< "preview" << post->getPreview().c_str()
+									<< "pubDate" << (int) post->getTs_PubDate()
+									<< "body" << post->getBody().c_str());
+//				mongo::Query query(o);
 
-				//TODO база и коллекция из поля
-				conn->insert("feed_test.testcoll", o);
-			}
+			conn->insert(base, o);
+//			}
 		}
 	}
 
@@ -54,7 +53,7 @@ namespace feed
 	{
 		mongo::BSONObj o = BSON("title" << post.getTitle()
 								<< "preview" << post.getPreview()
-								<< "pubDate" << post.getTs_PubDatetoString());
+								<< "pubDate" << (int) post.getTs_PubDate());
 		mongo::Query query(o);
 		std::auto_ptr< mongo::DBClientCursor > cursor = conn->query(base, query);
 		return cursor->itcount() == 0;
