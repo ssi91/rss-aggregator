@@ -38,13 +38,23 @@ namespace feed
 			const xmlpp::Node *pNode = parser.get_document()->get_root_node();
 
 			//TODO сделать универсальный проход по Узлам с учётом текстовых узлов там, где их быть не должно
+			xmlpp::Node::NodeList rssChList;
 			if (pNode->get_name() == "rss")
+			{
+				rssChList = pNode->get_children();
 				pNode = pNode->get_first_child();
+			}
 			xmlpp::Node::NodeList itemList;
-			if (pNode->get_name() == "channel")
-				itemList = pNode->get_children();
+			for (xmlpp::Node::NodeList::iterator itln = rssChList.begin(); itln != rssChList.end(); ++itln)
+			{
+				if ((*itln)->get_name() == "channel")
+				{
+					pNode = *itln;
+					break;
+				}
+			}
+			itemList = pNode->get_children();
 
-			std::string title, preview, body;
 			time_t pubDate = 0;
 			Stack< Post > stack;
 
@@ -52,6 +62,7 @@ namespace feed
 			{
 				if ((*item)->get_name() == "item")
 				{
+					std::string title, preview, body;
 					xmlpp::Node::NodeList itemNodes = (*item)->get_children();
 					for (xmlpp::Node::NodeList::iterator itemNode = itemNodes.begin(); itemNode != itemNodes.end(); ++itemNode)
 					{
@@ -69,7 +80,12 @@ namespace feed
 							if (nodeText)
 							{
 								preview = nodeText->get_content();
-								break;
+							}
+							else
+							{
+								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+								if (nodeContent)
+									preview = nodeContent->get_content();
 							}
 						}
 						else if ((*itemNode)->get_name() == "description")
@@ -77,7 +93,27 @@ namespace feed
 							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
 							if (nodeText)
 							{
-								body = nodeText->get_content();
+								body = nodeText->get_name();
+							}
+							else
+							{
+								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+								if (nodeContent)
+									body = nodeContent->get_content();
+							}
+						}
+						else if ((*itemNode)->get_name() == "encoded")
+						{
+							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+							if (nodeText)
+							{
+								body = nodeText->get_name();
+							}
+							else
+							{
+								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+								if (nodeContent)
+									body = nodeContent->get_content();
 							}
 						}
 						else if ((*itemNode)->get_name() == "pubDate")
