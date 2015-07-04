@@ -93,7 +93,7 @@ namespace feed
 							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
 							if (nodeText)
 							{
-								body = nodeText->get_name();
+								body = nodeText->get_content();
 							}
 							else
 							{
