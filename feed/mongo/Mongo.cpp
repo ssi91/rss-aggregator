@@ -3,6 +3,7 @@
 //
 
 #include "Mongo.h"
+#include "../../renderexception.h"
 #include <sstream>
 
 namespace feed
@@ -21,7 +22,6 @@ namespace feed
 			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
 			vP->push_back(post);
 		}
-//TODO: не забыть удалить
 		return *vP;
 	}
 
@@ -65,14 +65,17 @@ namespace feed
 
 		if (!instance.initialized())
 		{
-			//TODO fail
+			std::ostringstream statusStream;
+			statusStream << instance.status();
+			std::string status = statusStream.str();
+			LOG_TRACE("failed to initialize the client driver: " + status + "\n");
 		}
 
 		cs = mongo::ConnectionString::parse(fullUri, errmsg);
 
 		if (!cs.isValid())
 		{
-			//TODO fail
+			LOG_TRACE("Error parsing connection string " + uri + " (" + errmsg + ")\n");
 		}
 
 		conn.reset(cs.connect(errmsg));
@@ -108,6 +111,7 @@ namespace feed
 
 	bool Mongo::auth(const std::string &login, const std::string &password)
 	{
-		return conn->auth(base, login, password, errmsg);
+		std::cout << base.substr(0, base.find('.')) << std::endl;
+		return conn->auth(base.substr(0, base.find('.')), login, password, errmsg);
 	}
 }
