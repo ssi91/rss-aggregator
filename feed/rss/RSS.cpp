@@ -8,20 +8,6 @@
 
 namespace feed
 {
-
-	RSS::RSS(const std::string &rssPath)
-	{
-		if (rssPath.substr(0, 4) == "http")
-		{
-			//TODO parsing by address
-		}
-		else
-		{
-			XML_Parser xmlParser();
-			//TODO work with file in file system
-		}
-	}
-
 	std::vector< Stack< Post > > &RSS::readFeedFiles(const IDB &db, const std::string &path)
 	{
 		time_t lastDate = db.getLastByDate().getTs_PubDate();
@@ -37,7 +23,6 @@ namespace feed
 
 			const xmlpp::Node *pNode = parser.get_document()->get_root_node();
 
-			//TODO сделать универсальный проход по Узлам с учётом текстовых узлов там, где их быть не должно
 			xmlpp::Node::NodeList rssChList;
 			if (pNode->get_name() == "rss")
 			{

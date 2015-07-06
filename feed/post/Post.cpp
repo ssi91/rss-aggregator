@@ -27,7 +27,6 @@ namespace feed
 	const std::string &Post::toOctopress(const std::string &separator) const
 	{
 		std::string *octoPost = new std::string(preview + '\n' + separator + '\n' + body + '\n');
-		//TODO не забудь удалить потом
 		return *octoPost;
 	}
 

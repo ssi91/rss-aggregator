@@ -14,8 +14,6 @@ namespace feed
 
 		static std::map< std::string, boost::date_time::months_of_year > &setMonthMap();
 	public:
-		RSS(const std::string &rssPath);
-
 		RSS(const IDB &db, bool autoInit = true);
 
 		static time_t convertDateToTimestamp(const std::string &pubDate);
