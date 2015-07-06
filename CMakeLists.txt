@@ -40,6 +40,7 @@ set(SOURCE_FILES
     renderexception.cpp
     Stack.h
     testimport.cpp
+    some-functions/sameFunctions.cpp
     )
 add_executable(rss_aggregator ${SOURCE_FILES})
 target_link_libraries(rss_aggregator
@@ -51,4 +52,5 @@ target_link_libraries(rss_aggregator
     ${XMLPP_LIBRARIES}
     ${Boost_LIBRARIES}
     SimpleAmqpClient
+    curl
     )
