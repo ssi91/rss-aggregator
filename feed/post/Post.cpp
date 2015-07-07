@@ -47,4 +47,9 @@ namespace feed
 		pds << ts_pubDate;
 		return pds.str();
 	}
+
+	const std::string & Post::getCategory() const
+	{
+		return category;
+	}
 }

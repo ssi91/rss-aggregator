@@ -19,7 +19,7 @@ namespace feed
 		while (cursor->more())
 		{
 			mongo::BSONObj obj = cursor->next();
-			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
+			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str());
 			vP->push_back(post);
 		}
 		return *vP;
@@ -36,16 +36,12 @@ namespace feed
 	{
 		for (std::vector< Post >::iterator post = vector.begin(); post != vector.end(); ++post)
 		{
-//			if (isUniquePost(*post))
-//			{
 			mongo::BSONObj o = BSON("title" << post->getTitle().c_str()
 									<< "preview" << post->getPreview().c_str()
 									<< "pubDate" << (int) post->getTs_PubDate()
-									<< "body" << post->getBody().c_str());
-//				mongo::Query query(o);
-
+									<< "body" << post->getBody().c_str()
+									<< "category" << post->getCategory());
 			conn->insert(base, o);
-//			}
 		}
 	}
 
@@ -105,7 +101,7 @@ namespace feed
 	{
 		mongo::Query query;
 		mongo::BSONObj obj = conn->findOne(base, query.sort("pubDate", -1));
-		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str());
+		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str());
 		return *post;
 	}
 

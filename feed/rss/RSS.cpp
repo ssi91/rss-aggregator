@@ -41,6 +41,7 @@ namespace feed
 			itemList = pNode->get_children();
 
 			time_t pubDate = 0;
+			std::string category;
 			Stack< Post > stack;
 
 			for (xmlpp::Node::NodeList::iterator item = itemList.begin(); item != itemList.end(); ++item)
@@ -92,7 +93,7 @@ namespace feed
 							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
 							if (nodeText)
 							{
-								body = nodeText->get_name();
+								body = nodeText->get_content(); //TODO ?!
 							}
 							else
 							{
@@ -112,11 +113,19 @@ namespace feed
 					}
 					if (pubDate > lastDate)
 					{
-						Post post = Post(title, preview, pubDate, body);
+						Post post = Post(title, preview, pubDate, body, category);
 						stack.push(post);
 					}
 					else
 						break;
+				}
+				else if ((*item)->get_name() == "title")
+				{
+					const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*item)->get_first_child());
+					if (nodeText)
+					{
+						category = nodeText->get_content();
+					}
 				}
 				else
 					continue;
