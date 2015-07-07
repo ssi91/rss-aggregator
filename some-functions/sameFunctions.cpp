@@ -1,7 +1,7 @@
 #include <iostream>
 #include "sameFunctions.h"
 
-static int numFeed = 0;
+//static int numFeed = 0;
 
 void download(char *uri, char *_path)
 {
@@ -44,7 +44,7 @@ void downloadFromFile(FILE *f, char *path)
 	{
 		char uri[100];//TODO выделить память нормально
 		fscanf(f, "%s[^\n]", uri);
-		++numFeed;
+//		++numFeed;
 		download(uri, path);
 	}
 	fclose(f);

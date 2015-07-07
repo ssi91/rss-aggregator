@@ -111,7 +111,6 @@ namespace feed
 
 	bool Mongo::auth(const std::string &login, const std::string &password)
 	{
-		std::cout << base.substr(0, base.find('.')) << std::endl;
 		return conn->auth(base.substr(0, base.find('.')), login, password, errmsg);
 	}
 }
