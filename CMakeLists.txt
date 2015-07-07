@@ -18,7 +18,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED OFF)
 
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.54.0 REQUIRED COMPONENTS thread system regex filesystem)
+find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
