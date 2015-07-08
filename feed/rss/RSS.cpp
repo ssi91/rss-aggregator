@@ -4,7 +4,7 @@
 
 #include <expat.h>
 #include "RSS.h"
-#include "libxml++-2.6/libxml++/libxml++.h"
+#include "libxml++/libxml++.h"
 
 namespace feed
 {
