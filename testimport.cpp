@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	std::string user;
 	std::string pass;
 	std::string filename;
+	std::cout << "here" << std::endl;
 
 	while (argc > argi && *argv[argi] == '-') // option
 	{
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
 		argi++;
 	}
 
+	std::cout << "here" << std::endl;
 //	std::string filename = __DIR__ + "feeds";
 	const char rssDir[] = "rss-files/";
 	char *dir = new char[strlen(parseLastDir(__FILE__).c_str()) + strlen(rssDir)];
@@ -61,6 +63,7 @@ int main(int argc, char *argv[])
 	FILE *file = fopen(filename.c_str(), "r");
 	downloadFromFile(file, dir);
 	delete[] dir;
+	std::cout << "here" << std::endl;
 	try
 	{
 		Mongo mongo1(host, base);
