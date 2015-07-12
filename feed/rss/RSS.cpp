@@ -2,7 +2,6 @@
 // Created by ssi on 23.05.15.
 //
 
-#include <expat.h>
 #include "RSS.h"
 #include "libxml++/libxml++.h"
 
