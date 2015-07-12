@@ -5,7 +5,6 @@
 
 void download(char *uri, char *_path)
 {
-	std::cout << "here" << std::endl;
 	CURL *curl;
 	FILE *fp;
 	CURLcode res;
@@ -35,7 +34,6 @@ void download(char *uri, char *_path)
 		curl_easy_cleanup(curl);
 		fclose(fp);
 	}
-	std::cout << "here" << std::endl;
 }
 
 void downloadFromFile(FILE *f, char *path)
