@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	std::cout << "here" << std::endl;
 //	std::string filename = __DIR__ + "feeds";
 	const char rssDir[] = "rss-files/";
-	char *dir = new char[strlen(parseLastDir(__FILE__).c_str()) + strlen(rssDir)];
+	char *dir = new char[strlen(parseLastDir(__FILE__).c_str()) + strlen(rssDir) + 1];
 	strcpy(dir, parseLastDir(__FILE__).c_str());
 	strcat(dir, "rss-files/");
 	FILE *file = fopen(filename.c_str(), "r");

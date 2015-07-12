@@ -63,7 +63,7 @@ char *getFileName(char *path, bool &mustDelete)
 	char *name;
 	if (path[strlen(path) - 1] == '/')
 	{
-		name = new char[strlen("unknown_feed")];
+		name = new char[strlen("unknown_feed") + 1];
 		strcpy(name, "unknown_feed");
 		mustDelete = true;
 	}
