@@ -31,7 +31,6 @@ link_directories(${XMLPP_LIBRARY_DIRS})
 
 set(SOURCE_FILES
     feed/post/Post.cpp
-#    maintest.cpp
     feed/Feed.cpp
     feed/rss/RSS.cpp
     feed/Idb.h

@@ -1,8 +1,6 @@
 #include <iostream>
 #include "sameFunctions.h"
 
-//static int numFeed = 0;
-
 void download(char *uri, char *_path)
 {
 	CURL *curl;
@@ -17,8 +15,6 @@ void download(char *uri, char *_path)
 
 	if (path[strlen(path) - 1] != '/')
 		strcat(path, "/");
-//	if (!strcmp(getFileName(uri), ""))
-//		strcat(path, "unknown_feed");
 	strcat(path, fName);
 	if (mustDelete)
 		delete[] fName;
@@ -44,7 +40,6 @@ void downloadFromFile(FILE *f, char *path)
 	{
 		char uri[100];//TODO выделить память нормально
 		fscanf(f, "%s[^\n]", uri);
-//		++numFeed;
 		download(uri, path);
 	}
 	fclose(f);

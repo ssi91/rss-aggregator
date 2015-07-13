@@ -4,14 +4,12 @@
 
 #include "Mongo.h"
 #include "../../renderexception.h"
-#include <sstream>
 
 namespace feed
 {
 	std::vector< Post > &Mongo::getFromDB()
 	{
 		mongo::Query query;
-		std::vector< mongo::BSONObj > feedVector;
 		std::auto_ptr< mongo::DBClientCursor > cursor = conn->query(base, query, 0);
 
 		std::vector< Post > *vP = new std::vector< Post >;

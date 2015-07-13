@@ -1,7 +1,6 @@
 #include "feed/post/Post.h"
 #include "feed/mongo/Mongo.h"
 #include <boost/filesystem.hpp>
-#include <iostream>
 #include "dir.h"
 #include "feed/rss/RSS.h"
 #include <SimpleAmqpClient/SimpleAmqpClient.h>
@@ -16,7 +15,6 @@ int main(int argc, char *argv[])
 	int argi = 1;
 	std::string host;
 	std::string base;
-//	std::string path;
 	std::string user;
 	std::string pass;
 	std::string filename;
@@ -53,7 +51,6 @@ int main(int argc, char *argv[])
 		argi++;
 	}
 
-//	std::string filename = __DIR__ + "feeds";
 	const char rssDir[] = "rss-files/";
 	char *dir = new char[strlen(parseLastDir(__FILE__).c_str()) + strlen(rssDir) + 1];
 	strcpy(dir, parseLastDir(__FILE__).c_str());
