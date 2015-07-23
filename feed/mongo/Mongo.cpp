@@ -17,7 +17,8 @@ namespace feed
 		while (cursor->more())
 		{
 			mongo::BSONObj obj = cursor->next();
-			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str());
+			Post post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str(), obj["media"].str(),
+					  obj["link"].str());
 			vP->push_back(post);
 		}
 		return *vP;
@@ -38,7 +39,10 @@ namespace feed
 									<< "preview" << post->getPreview().c_str()
 									<< "pubDate" << (int) post->getTs_PubDate()
 									<< "body" << post->getBody().c_str()
-									<< "category" << post->getCategory());
+									<< "category" << post->getCategory()
+									<< "media" << post->getMedia()
+									<< "link" << post->getLink()
+			);
 			conn->insert(base, o);
 		}
 	}
@@ -99,7 +103,9 @@ namespace feed
 	{
 		mongo::Query query;
 		mongo::BSONObj obj = conn->findOne(base, query.sort("pubDate", -1));
-		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str());
+		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str(),
+							  obj["media"].str(),
+							  obj["link"].str());
 		return *post;
 	}
 

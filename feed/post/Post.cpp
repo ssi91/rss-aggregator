@@ -52,4 +52,14 @@ namespace feed
 	{
 		return category;
 	}
+
+	const std::string &Post::getMedia() const
+	{
+		return media;
+	}
+
+	const std::string &Post::getLink() const
+	{
+		return link;
+	}
 }
