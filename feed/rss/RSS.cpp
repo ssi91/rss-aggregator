@@ -9,169 +9,178 @@ namespace feed
 {
 	std::vector< Stack< Post > > &RSS::readFeedFiles(const IDB &db, const std::string &path)
 	{
-		time_t lastDate = db.getLastByDate().getTs_PubDate();
+		time_t lastDate;
 		using namespace boost::filesystem;
 		std::vector< Stack< Post > > *vector = new std::vector< Stack< Post > >;
 
 		for (recursive_directory_iterator it(__DIR__ + "../../rss-files"), end; it != end; ++it)
 		{
-			std::string fullPath = canonical(*it).string();
-
-			xmlpp::DomParser parser;
-			parser.parse_file(fullPath);
-
-			const xmlpp::Node *pNode = parser.get_document()->get_root_node();
-
-			xmlpp::Node::NodeList rssChList;
-			if (pNode->get_name() == "rss")
+			try
 			{
-				rssChList = pNode->get_children();
-				pNode = pNode->get_first_child();
-			}
-			xmlpp::Node::NodeList itemList;
-			for (xmlpp::Node::NodeList::iterator itln = rssChList.begin(); itln != rssChList.end(); ++itln)
-			{
-				if ((*itln)->get_name() == "channel")
+				std::string fullPath = canonical(*it).string();
+
+				xmlpp::DomParser parser;
+				parser.parse_file(fullPath);
+
+				const xmlpp::Node *pNode = parser.get_document()->get_root_node();
+
+				xmlpp::Node::NodeList rssChList;
+				if (pNode->get_name() == "rss")
 				{
-					pNode = *itln;
-					break;
+					rssChList = pNode->get_children();
+					pNode = pNode->get_first_child();
 				}
-			}
-			itemList = pNode->get_children();
-
-			time_t pubDate = 0;
-			std::string category, globalLink;
-			Stack< Post > stack;
-
-			for (xmlpp::Node::NodeList::iterator item = itemList.begin(); item != itemList.end(); ++item)
-			{
-				if ((*item)->get_name() == "item")
+				xmlpp::Node::NodeList itemList;
+				for (xmlpp::Node::NodeList::iterator itln = rssChList.begin(); itln != rssChList.end(); ++itln)
 				{
-					std::string title, preview, body, link = "", media;
-					xmlpp::Node::NodeList itemNodes = (*item)->get_children();
-					for (xmlpp::Node::NodeList::iterator itemNode = itemNodes.begin(); itemNode != itemNodes.end(); ++itemNode)
+					if ((*itln)->get_name() == "channel")
 					{
-						if ((*itemNode)->get_name() == "link")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								link = nodeText->get_content();
-							}
-							else
-							{
-								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
-								if (nodeContent)
-									link = nodeContent->get_content();
-							}
-							if (link == "")
-								link = globalLink;
-						}
-						else if ((*itemNode)->get_name() == "enclosure")
-						{
-							const xmlpp::Element *element = dynamic_cast<const xmlpp::Element *>((*itemNode));
-							if (element)
-							{
-								xmlpp::Attribute *attr = element->get_attribute("url");
-								media = attr->get_value();
-							}
-						}
-						else if ((*itemNode)->get_name() == "title")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								title = nodeText->get_content();
-							}
-						}
-						else if ((*itemNode)->get_name() == "title")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								title = nodeText->get_content();
-							}
-						}
-						else if ((*itemNode)->get_name() == "subtitle")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								preview = nodeText->get_content();
-							}
-							else
-							{
-								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
-								if (nodeContent)
-									preview = nodeContent->get_content();
-							}
-						}
-						else if ((*itemNode)->get_name() == "description")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								body = nodeText->get_content();
-							}
-							else
-							{
-								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
-								if (nodeContent)
-									body = nodeContent->get_content();
-							}
-						}
-						else if ((*itemNode)->get_name() == "encoded")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								body = nodeText->get_content();
-							}
-							else
-							{
-								const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
-								if (nodeContent)
-									body = nodeContent->get_content();
-							}
-						}
-						else if ((*itemNode)->get_name() == "pubDate")
-						{
-							const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
-							if (nodeText)
-							{
-								pubDate = convertDateToTimestamp(nodeText->get_content());
-							}
-						}
+						pNode = *itln;
+						break;
 					}
-					if (pubDate > lastDate)
+				}
+				itemList = pNode->get_children();
+
+				time_t pubDate = 0;
+				std::string category, globalLink;
+				Stack< Post > stack;
+
+				for (xmlpp::Node::NodeList::iterator item = itemList.begin(); item != itemList.end(); ++item)
+				{
+					if ((*item)->get_name() == "item")
 					{
-						Post post = Post(title, preview, pubDate, body, category, media, link);
-						stack.push(post);
+
+						std::string title, preview, body, link = "", media;
+						xmlpp::Node::NodeList itemNodes = (*item)->get_children();
+						for (xmlpp::Node::NodeList::iterator itemNode = itemNodes.begin(); itemNode != itemNodes.end(); ++itemNode)
+						{
+							if ((*itemNode)->get_name() == "link")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									link = nodeText->get_content();
+								}
+								else
+								{
+									const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+									if (nodeContent)
+										link = nodeContent->get_content();
+								}
+								if (link == "")
+									link = globalLink;
+							}
+							else if ((*itemNode)->get_name() == "enclosure")
+							{
+								const xmlpp::Element *element = dynamic_cast<const xmlpp::Element *>((*itemNode));
+								if (element)
+								{
+									xmlpp::Attribute *attr = element->get_attribute("url");
+									media = attr->get_value();
+								}
+							}
+							else if ((*itemNode)->get_name() == "title")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									title = nodeText->get_content();
+								}
+							}
+							else if ((*itemNode)->get_name() == "title")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									title = nodeText->get_content();
+								}
+							}
+							else if ((*itemNode)->get_name() == "subtitle")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									preview = nodeText->get_content();
+								}
+								else
+								{
+									const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+									if (nodeContent)
+										preview = nodeContent->get_content();
+								}
+							}
+							else if ((*itemNode)->get_name() == "description")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									body = nodeText->get_content();
+								}
+								else
+								{
+									const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+									if (nodeContent)
+										body = nodeContent->get_content();
+								}
+							}
+							else if ((*itemNode)->get_name() == "encoded")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									body = nodeText->get_content();
+								}
+								else
+								{
+									const xmlpp::ContentNode *nodeContent = dynamic_cast<const xmlpp::ContentNode *>((*itemNode)->get_first_child());
+									if (nodeContent)
+										body = nodeContent->get_content();
+								}
+							}
+							else if ((*itemNode)->get_name() == "pubDate")
+							{
+								const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*itemNode)->get_first_child());
+								if (nodeText)
+								{
+									pubDate = convertDateToTimestamp(nodeText->get_content());
+								}
+							}
+						}
+						if (pubDate > lastDate)
+						{
+							Post post = Post(title, preview, pubDate, body, category, media, link);
+							stack.push(post);
+						}
+						else
+							break;
+					}
+					else if ((*item)->get_name() == "title")
+					{
+						const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*item)->get_first_child());
+						if (nodeText)
+						{
+							category = nodeText->get_content();
+						}
+						lastDate = db.getLastByDate(category).getTs_PubDate();
+					}
+					else if ((*item)->get_name() == "link")
+					{
+						const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*item)->get_first_child());
+						if (nodeText)
+						{
+							globalLink = nodeText->get_content();
+						}
 					}
 					else
-						break;
+						continue;
 				}
-				else if ((*item)->get_name() == "title")
-				{
-					const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*item)->get_first_child());
-					if (nodeText)
-					{
-						category = nodeText->get_content();
-					}
-				}
-				else if ((*item)->get_name() == "link")
-				{
-					const xmlpp::TextNode *nodeText = dynamic_cast<const xmlpp::TextNode *>((*item)->get_first_child());
-					if (nodeText)
-					{
-						globalLink = nodeText->get_content();
-					}
-				}
-				else
-					continue;
+				if (stack.getCount())
+					vector->push_back(stack);
 			}
-			if (stack.getCount())
-				vector->push_back(stack);
+			catch (xmlpp::parse_error &pe)
+			{
+				continue;
+			}
 		}
 
 		return *vector;
