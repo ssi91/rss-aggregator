@@ -27,7 +27,7 @@ namespace feed
 
 		std::vector< Post > &getFromDB();
 		void setToDB(std::vector< Post > &) const;
-		const Post &getLastByDate() const;
+		const Post &getLastByDate(std::string &category) const;
 		bool isUniquePost(const Post &) const;
 		bool auth(const std::string &login, const std::string &password);
 

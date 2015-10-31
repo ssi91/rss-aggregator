@@ -99,9 +99,9 @@ namespace feed
 		initConnection(fullUrl);
 	}
 
-	const Post &Mongo::getLastByDate() const
+	const Post &Mongo::getLastByDate(std::string &category) const
 	{
-		mongo::Query query;
+		mongo::Query query(BSON("category" << category));
 		mongo::BSONObj obj = conn->findOne(base, query.sort("pubDate", -1));
 		Post *post = new Post(obj["title"].str(), obj["preview"].str(), obj["pubDate"].numberInt(), obj["body"].str(), obj["category"].str(),
 							  obj["media"].str(),

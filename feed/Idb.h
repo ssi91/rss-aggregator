@@ -10,7 +10,7 @@ namespace feed
 	{
 	public:
 		virtual std::vector< Post > &getFromDB() = 0;
-		virtual const Post &getLastByDate() const = 0;
+		virtual const Post &getLastByDate(std::string &category) const = 0;
 		virtual void setToDB(std::vector< Post > &) const = 0;
 	};
 };
